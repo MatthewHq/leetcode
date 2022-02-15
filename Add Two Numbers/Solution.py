@@ -45,10 +45,13 @@ class Solution:
                 answerTail=answerTail.next
         
             if(l2==None and l1==None):
+                if carry:
+                    answerTail.next=ListNode(1,None)
+                    answerTail=answerTail.next
                 done=True
         return answerHead
-num1 = ListNode(7, ListNode(6, ListNode(5, ListNode(2, None))))
-num2 = ListNode(8, ListNode(9, None))
+num1 = ListNode(9, ListNode(9, ListNode(9, ListNode(9, None))))
+num2 = ListNode(9, ListNode(9, None))
 
 
 
@@ -60,6 +63,7 @@ print(answer.val)
 print(answer.next.val)
 print(answer.next.next.val)
 print(answer.next.next.next.val)
+print(answer.next.next.next.next.val)
 # print(sol.addTwoNumbers(num1, num2).next.val)
 # print(sol.addTwoNumbers(num1, num2).next.next.val)
 
