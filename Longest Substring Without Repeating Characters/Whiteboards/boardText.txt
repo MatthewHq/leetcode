@@ -1,0 +1,22 @@
+Initial approach just looking at the question I started thinking dynamic programming.
+
+making an example on excel that looks like:
+a	b	a	c	d	e	f	g	h	c
+									
+									
+a	b	c	c	d	e	f	g	h	c
+
+just to visually think it through
+A little further thinking based on only needing the LENGTH on no repeats made me think perhaps a sort of set or hashmap feature would solve this more simplistically.
+
+
+
+After 2 submissions I found an error with my approach in handling 1 character strings and a more complicated problem that stems from me oversimplifying my solution
+
+
+I can either
+keep track of how long the string was prior(1)
+truncate the string(2)
+
+(1) would need to have some sort of tracking on indices
+(2) would need to truncate from the repeating to the left O(n) added
