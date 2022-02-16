@@ -1,18 +1,18 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        #using a set because in python a set is implemented as a has table
-        # https://wiki.python.org/moin/TimeComplexity
-        mySet=set()
+        myDc={}
         lenCounter=0
         lenMax=0
-        for ch in s:
-            if ch not in mySet:
-                mySet.add(ch)
+        for i in range(len(s)):
+            if myDc.get(s[i])==None:
+                myDc[s[i]]=i
                 lenCounter+=1
             else:
                 lenCounter=0
-                mySet.clear()
-                mySet.add(ch)
+                print(i," | ", myDc.get(s[i])," | ",s[i]," | ",i-myDc.get(s[i])-1)
+                lenCounter=i-myDc.get(s[i])-1
+                print(lenCounter)
+                myDc[s[i]]=i
                 lenCounter+=1
             if lenCounter>lenMax:
                 lenMax=lenCounter
@@ -22,5 +22,5 @@ class Solution:
 sol = Solution()
 # str="abacdefghic"
 str="dvdf"
-
+str="abba"
 print(sol.lengthOfLongestSubstring(str))

@@ -20,3 +20,6 @@ truncate the string(2)
 
 (1) would need to have some sort of tracking on indices
 (2) would need to truncate from the repeating to the left O(n) added
+
+After fixing this error we run into another one with "abba"
+
