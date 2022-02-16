@@ -23,3 +23,4 @@ truncate the string(2)
 
 After fixing this error we run into another one with "abba"
 
+Realized I can't just go back to any given repeat, but also consider that they can be "wrapped" which means its going back to a given repeat index only if it is closer to the current index than a previous repeat
