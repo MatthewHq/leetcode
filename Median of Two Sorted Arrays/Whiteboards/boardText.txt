@@ -1,0 +1,6 @@
+Starting out from first glance with the given requirement of O(Log(m+n)) I'm thinking "this is definitely binary search"
+Going to play around with excel to see if I can see any properties in the situation I can exploit
+
+
+Have been playing around in excel and I feel like I am slowly getting somewhere but this is definitely taking alot longer than expected and I am feeling more lost than usual. Really working on not looking at any hints or discussions, this problem is definitely going to take longer than usual. First unassisted "HARD" i've attempted in a while.
+There's a chance I will skip this problem at some point and come back to it as to not get stuck for too long and waste too much time, perhaps an easier binary search problem will lead me towards finding a solution on this one later on. For now however, I will continue.
