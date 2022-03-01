@@ -1,0 +1,9 @@
+First initial reaction is that this is definitely dynamic programming or if I'm wrong perhaps there is a recursive solution but even just thinking that "outloud" makes it sound like its not a recursive thing, I am 90% sure it is a recursive solution.
+
+After looking further into it thinking about potential solutions by looking at an excel setup i amde (Sheet1) I realize that this was the setup for longest common subsequence. 
+
+I will have to approach this problem by looking at my notes (see solution jpeg the top "BONO" example)
+
+After looking at my notes I can't particuarly figure out the algorithm
+
+I have actually done this leetcode before and have the solution python file in my backups of my class, it was an extra credit assignment. It seems I have forgotten mostly everything regarding this problem. I will be looking at my notes.
