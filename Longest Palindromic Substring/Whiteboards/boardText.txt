@@ -7,3 +7,21 @@ I will have to approach this problem by looking at my notes (see solution jpeg t
 After looking at my notes I can't particuarly figure out the algorithm
 
 I have actually done this leetcode before and have the solution python file in my backups of my class, it was an extra credit assignment. It seems I have forgotten mostly everything regarding this problem. I will be looking at my notes.
+I ended up caving in and looking at online resources because of my notes being an output of the NUMBER of the longest palimdrone. 
+
+I've encountered 3 approaches that I will take a look at and compare their runtime and different properties
+
+
+Solution 1:
+https://www.youtube.com/watch?v=UflHuQj6MVA
+
+Solution 2:
+https://leetcode.com/problems/longest-palindromic-substring/solution/ (first solution)
+ decided to switch solution 2 as it was more relevant than the prior selection
+ This being the best solution I will be giving it more thought, I'll try and see if i can find the leetcode problem for longest commmon substring
+
+Solution 3: 
+PDF "Dynamic_Programming(1)-2" bottom page
+
+
+
