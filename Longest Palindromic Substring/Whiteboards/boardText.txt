@@ -24,4 +24,7 @@ Solution 3:
 PDF "Dynamic_Programming(1)-2" bottom page
 
 
+Update 4/1/2022
+I actually ended up getting sidetracked into my spotify project amongst other things, I will be going with Solution 1 in the meantime and will most likely be planning on revisiting this problem in the future once my immediate memory of the solution fades  a bit
 
+A little dissatisfied with the dynamic programming solution I used as it didn't seem to perform the best, I think I will come back next time with an approach that expands around the center

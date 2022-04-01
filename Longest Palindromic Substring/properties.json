@@ -1,7 +1,7 @@
 {
   "title": "Longest Palindromic Substring",
   "difficulty": "medium",
-  "assistLvl": null,
+  "assistLvl": 10,
   "attemps": null,
   "approxTime": null,
   "approxTimePlusMinus": null
