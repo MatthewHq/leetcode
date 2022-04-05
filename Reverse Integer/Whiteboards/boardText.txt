@@ -1,0 +1,35 @@
+Noticing "Assume the environment does not allow you to store 64-bit integers (signed or unsigned)."
+
+We have 2 things we are doing:
+
+Reversing the int:
+One thought is to simply use toString and just reverse it, then parseInt
+I want to avoid this method as it seems a little cheeky and I may have more fun contemplating a different approach
+It may also be noted that some of these operations like '+' may be s certain order of magnitude that I am not aware of, I will be ignoring this.
+For true optimization we would definitely want to know operation runtimes
+
+Trying to think of the LEAST process intensive way to do this in O(n)
+First thought is dividing and truncating everything but every power of 10 under that of a 32bit integer
+It's only 10 powers of 10 (0-9)
+Then taking each number and multiplying it by the opposite end of the power of 10 it was divided by
+
+
+
+Checking exceeding values:
+As it is reversed, truncating on of the ends to fit the number in 32bit value and then doing a check on the truncated value
+
+
+To clarify, this is our range is [-2147483648,2147483647]
+
+To check if it exceeds this number we could do the following
+
+myNumber = -2147483648
+myNumber/10 (truncated) = -214748364
+then check if that last digit (the 8) is more than 8
+
+This would be the method where we truncate the last digit
+Note that there may be no need for that middle division as it can be circumvented/compensated for via the reversing mechanism
+
+
+
+
