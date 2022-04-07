@@ -38,3 +38,7 @@ Note that there may be no need for that middle division as it can be circumvente
 After first iteration, got a wrong answer from failure to notice the fact that any leading 0s once reversed will change the order of the number
 
 Had to change my dictionaries to lists so I could pop the 0s out, it was quite a pain but got it working
+
+
+A little note, I went really basic in not even using mod since I was already not using toString.
+WHEN RETURNING TO THIS, SEEK A DIFFERENT METHOD
