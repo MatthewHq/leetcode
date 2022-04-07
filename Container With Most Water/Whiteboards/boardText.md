@@ -26,3 +26,12 @@ Bit of redundance in that satement but hey these are just my thoughts
 
 Figure 3 shows that we would NEED to know the NEXT tallest bar, we could sort the heights which would take us to nlog(n) or maybe do a binary search on height as we go down each time which might take us to nlog(h) where h is max height
 - havem't completely contemplated those runtimes but if it came between anything that replaced n with h, h would probably more desirable as constraints listed on this problem show h having a smaller cap, assuming even & ramdomm distribution of input
+
+
+## Post Peek
+GG I could have just done 2 pointer approach, had a bit more contemplation
+
+What happens when TWO pointer's heights are the same
+- Need to think it through a little more, thinking comparing the heights of each of their next ones, but what happens if those next ones are the same etc.
+
+ pausing for now
