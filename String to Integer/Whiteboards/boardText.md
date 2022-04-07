@@ -21,7 +21,8 @@ There are couple features to be implemented that I will organize / discuss
     4. Convert Digits to integer
         -Have't thought of how I'm going to implement this one in terms of registering each integer
             - might look at ascii character values 0-9, I am hesitatnt to use "toString" for for each individual character, feels like i'd be making a hammer "from scratch" with a hammer
-    
+                - after testing it looks like ascii implemnentation per character will be very easy
+                - 0-9 is 48-57 so just a simple shift will work
     5.  "If no digits were read, then the integer is 0. Change the sign as necessary"
         - as the initial for loop checking to filter out ALL digits occurs, each character will be popped into a list, if the list is empty, the returned value will be 0
 
@@ -33,5 +34,6 @@ There are couple features to be implemented that I will organize / discuss
                     - given "2147483648" (max possible + 1) we can truncate from left side as we build 2147483648 --> 2 | 147483648
                         - check if 147483648 > 147483647 and checking if that left particle is "2" , making the check 32-bit friendly
 
-		
-		
+
+
+After submission looks like I misunderstood that THERE CAN ONLY BE whitespace at the start, no words, if there are words it should default to 0
