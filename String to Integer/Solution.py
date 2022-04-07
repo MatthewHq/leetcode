@@ -1,12 +1,3 @@
-
-
-from lib2to3.pgen2 import token
-from re import S
-from typing import final
-
-from sympy import zeros
-
-
 class Solution:
     def myAtoi(self, s: str) -> int:
         MAX_32_BIT = 2147483647
@@ -44,12 +35,9 @@ class Solution:
                         else:
                             break
                     else:
-                        # if ord(s[i])!=47:
                         break
                 elif negative!=None:
                     break
-                # else:
-                #     break
             elif zeroStreak:
                 if ord(s[i]) > 48 and ord(s[i]) < 58:
                     digitStreak = True
@@ -94,7 +82,3 @@ assert sol.myAtoi("    +0a32") == 0
 print(sol.myAtoi("  +  413"))
 assert sol.myAtoi("  +  413") == 0
 
-
-
-
-# "00000-42a1234"
