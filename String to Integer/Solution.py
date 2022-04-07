@@ -4,6 +4,8 @@ from lib2to3.pgen2 import token
 from re import S
 from typing import final
 
+from sympy import zeros
+
 
 class Solution:
     def myAtoi(self, s: str) -> int:
@@ -12,32 +14,60 @@ class Solution:
 
         tokenized = []
         digitStreak = False
+        whiteSpaceStreak = True
+        zeroStreak = False
         # negative is -1 if negative number, else negative is 1
-        negative = 1
+        negative = None
 
         for i in range(len(s)):
-            if not digitStreak:
+            if s[i] == '.':
+                break
+
+            if whiteSpaceStreak:
                 if s[i] != ' ':
-                    if s[i] == '-':
-                        negative = -1
+                    # notce the 48 here avoiding any leading 0s as well
+                    if ord(s[i]) > 47 and ord(s[i]) < 58:
+                        whiteSpaceStreak = False
+                        if ord(s[i]) > 48:
+                            digitStreak = True
+                            tokenized.append(ord(s[i])-48)
+                        else:
+                            zeroStreak = True
+                    elif s[i] == '-':
+                        if negative == None:
+                            negative = -1
+                        else:
+                            break
                     elif s[i] == '+':
-                        negative = 1
-                    elif ord(s[i]) > 47 and ord(s[i]) < 58:
-                        digitStreak = True
-                        tokenized.append(ord(s[i])-48)
-            else:
+                        if negative == None:
+                            negative = 1
+                        else:
+                            break
+                    else:
+                        # if ord(s[i])!=47:
+                        break
+                elif negative!=None:
+                    break
+                # else:
+                #     break
+            elif zeroStreak:
+                if ord(s[i]) > 48 and ord(s[i]) < 58:
+                    digitStreak = True
+                    zeroStreak = False
+                    tokenized.append(ord(s[i])-48)
+                elif ord(s[i]) != 48:
+                    break
+            elif digitStreak:
                 if ord(s[i]) > 47 and ord(s[i]) < 58:
                     tokenized.append(ord(s[i])-48)
-                    if len(tokenized) == 10:
-                        # digitStreak = False
+                    if len(tokenized) == 11:
                         break
                 else:
-                    # digitStreak = False
                     break
-        # print("final negative", negative)
-        # print(tokenized)
 
         finalNumber = 0
+        if negative == None:
+            negative = 1
         for i in range(len(tokenized)):
             finalNumber = 10*finalNumber+tokenized[i]*negative
 
@@ -50,6 +80,21 @@ class Solution:
 
 sol = Solution()
 
+print(sol.myAtoi("--3.14"))
+assert sol.myAtoi("--3.14") == 0
+assert sol.myAtoi("  00000000000123450678") == 123450678
+print(sol.myAtoi("-000000000000001"))
+assert sol.myAtoi("-000000000000001") == -1
+print(sol.myAtoi("-3.14"))
+assert sol.myAtoi("-3.14") == -3
+print(sol.myAtoi("00000-42a1234"))
+assert sol.myAtoi("00000-42a1234") == 0
+print(sol.myAtoi("    +0a32"))
+assert sol.myAtoi("    +0a32") == 0
+print(sol.myAtoi("  +  413"))
+assert sol.myAtoi("  +  413") == 0
 
-print(sol.myAtoi("words and 987"))
-print(sol.myAtoi(" 01000001 "))
+
+
+
+# "00000-42a1234"

@@ -37,3 +37,11 @@ There are couple features to be implemented that I will organize / discuss
 
 
 After submission looks like I misunderstood that THERE CAN ONLY BE whitespace at the start, no words, if there are words it should default to 0
+
+It also appears that there can only be ONCE sign specifier, else default to 0
+
+Running into so many edge cases, continued to add solution modifcations
+
+Another edge case of having a decimal input as a string
+
+another edge case: "00000-42a1234"

@@ -2,7 +2,7 @@ from re import S
 
 
 print(ord('0'))
-print(ord('9'))
+print(ord('a'))
 
 s = "aaaa"
 
