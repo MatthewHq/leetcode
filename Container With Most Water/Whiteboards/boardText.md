@@ -34,4 +34,6 @@ GG I could have just done 2 pointer approach, had a bit more contemplation
 What happens when TWO pointer's heights are the same
 - Need to think it through a little more, thinking comparing the heights of each of their next ones, but what happens if those next ones are the same etc.
 
- pausing for now
+pausing for now
+
+contemplating the same height bar issue a little but not alot, going to just go for it and assume there isn't a problem with picking either of the two first
