@@ -1,3 +1,3 @@
 class Solution:
-    def longestPalindrome(self, s: str) -> str:
+    def maxProfit(self, prices: List[int]) -> int:
         
