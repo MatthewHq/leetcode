@@ -37,3 +37,6 @@ What happens when TWO pointer's heights are the same
 pausing for now
 
 contemplating the same height bar issue a little but not alot, going to just go for it and assume there isn't a problem with picking either of the two first
+
+
+A bit dissapointed I didn't take a little longer to contemplate the initial solution being two pointers, the only hint I got from peeking was skimming through the titles in discussion and getting the word "two pointers"
