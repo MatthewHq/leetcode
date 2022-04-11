@@ -15,3 +15,6 @@ From there 3 calculations are made, the left potential between the left 2 pointe
 
 
 Have to leave now but will implement this when I get back to this
+
+
+Returned and realized a small edge case that needs to be covered regarding my selectors (green squares) being shifted around
