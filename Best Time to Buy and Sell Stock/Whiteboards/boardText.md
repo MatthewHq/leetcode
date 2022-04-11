@@ -18,3 +18,9 @@ Have to leave now but will implement this when I get back to this
 
 
 Returned and realized a small edge case that needs to be covered regarding my selectors (green squares) being shifted around
+
+took another break then went on a bug hunting spree, honestly did not like that i submitted 3 times before the answer was accepted but thats ok
+There are some optimizations that could potentially be done with how some stuff isn't moved around on some of the cycles thus creating redundant computations, this could be fixed pretty easy with some testing though I will not be spending the time for it
+
+Most importantly, an O(n) solution was implemented
+I seemed to have overcomplicated the problem however by doing a 2 end approach where I could have done it one ended.
