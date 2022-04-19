@@ -35,7 +35,7 @@ So now picking this problem back up lets organize some of the things that I want
       - For this I am thinking along the lines of json or a multilevel structure.
       - **this part im very excited about my implementation:**<br>
         ``dictionary``<br>	``Key: int size``<br>
-        ``Value: int double array[[parentID,namestart,nameEnd,contentStart,contentEnd]]``<br>
+        ``Val: int double array [[parentID,namestart,nameEnd,contentStart,contentEnd]]``<br>
         The reason we can do this is because we can reference the original string input in subtring form, though it is very important we don't actually use substring() and instead use ``string[lowerIndex:UpperIndex]`` because of runtime + space reasons
     
 
