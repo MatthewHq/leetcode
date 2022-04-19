@@ -1,3 +1,6 @@
+from numpy import size
+
+
 class Solution:
     def findDuplicate(self, paths):
 
@@ -5,6 +8,7 @@ class Solution:
 
         # [[parentID,namestart,nameEnd,contentStart,contentEnd]]
         parents = []
+        bySizeContents = {}
         counter = 0
         while(counter < len(paths)):
             nameStart, nameEnd, contentStart, contentEnd = 0, 0, 0, 0
@@ -17,10 +21,23 @@ class Solution:
                     if not parentFlag:
                         parentFlag = True
                         parents.append(charCounter-1)
+                    else:
+                        nameStart = charCounter+1
+                elif paths[counter][charCounter] == '(':
+                    nameEnd = charCounter-1
+                    contentStart = charCounter+1
+                elif paths[counter][charCounter] == ')':
+                    contentEnd = charCounter-1
+                    contentSize = contentEnd-contentStart+1
+                    if bySizeContents.get(size) == None:
+                        bySizeContents[size] = []
+                    bySizeContents[size].append(
+                        [parentID, nameStart, nameEnd, contentStart, contentEnd])
                 charCounter += 1
 
             counter += 1
         print(parents)
+        print(bySizeContents)
 
 
 sol = Solution()
