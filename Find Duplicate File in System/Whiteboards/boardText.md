@@ -67,3 +67,14 @@ Our hash isn't perfect though and thus we must compare the subdivided groups amo
 
 
 This solution ultimately is aimed towards bigger files where I'm not sure if you can even place bigger contents in a hashmap in an efficient way. Without doing some more research on hashmaps and their space complexcity with keys, it feels a little cheap just throwing a hashmap at it where its kinda doing the work for me at the low level of example inputs from the question, but in a real world solution I doubt a simple hashmap thrown at the problem would fix it, unless it was a specialized sort of hash, though I'd have to learn more about hashing at that level
+
+
+Post Accepted: 
+
+`` Runtime: 4197 ms, faster than 5.03% of Python3 online submissions for Find Duplicate File in System.
+Memory Usage: 21.9 MB, less than 100.00% of Python3 online submissions for Find Duplicate File in System. ``
+
+
+
+
+Looks like the solution was a straight up hashmap as I expected but I doubt it would scale to larger files, hence my implementation being relatively slow compared to everyone **BUT** I beat out everyone in memory usage with a clean 100%
