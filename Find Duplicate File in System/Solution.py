@@ -1,4 +1,5 @@
 from binascii import Incomplete
+from pickle import POP
 from numpy import size
 
 
@@ -9,22 +10,22 @@ class Solution:
 
         # [[parentID,namestart,nameEnd,contentStart,contentEnd]]
         parents = []
-        bySizeContents = {}
+        sortedContents = {}
         counter = 0
         while(counter < len(paths)):
             nameStart, nameEnd, contentStart, contentEnd, lazyHash = 0, 0, 0, 0, 0
             parentID = counter
             charCounter = 0
-            parentFlag = False
+            parentFlag = True
             inContent = 0
             while(charCounter < len(paths[counter])):
                 print(counter, paths[counter][charCounter])
                 if paths[counter][charCounter] == ' ':
-                    if not parentFlag:
-                        parentFlag = True
+                    if parentFlag:
+                        parentFlag = False
                         parents.append(charCounter-1)
-                    else:
-                        nameStart = charCounter+1
+                    # else:
+                    nameStart = charCounter+1
                 elif paths[counter][charCounter] == '(':
                     nameEnd = charCounter-1
                     contentStart = charCounter+1
@@ -33,12 +34,12 @@ class Solution:
                     inContent = 0
                     contentEnd = charCounter-1
                     contentSize = contentEnd-contentStart+1
-                    if bySizeContents.get(contentSize) == None:
-                        bySizeContents[contentSize] = {}
-                    if bySizeContents.get(contentSize).get(lazyHash) == None:
-                        bySizeContents.get(contentSize)[lazyHash] = []
+                    if sortedContents.get(contentSize) == None:
+                        sortedContents[contentSize] = {}
+                    if sortedContents.get(contentSize).get(lazyHash) == None:
+                        sortedContents.get(contentSize)[lazyHash] = []
 
-                    bySizeContents[contentSize][lazyHash].append(
+                    sortedContents[contentSize][lazyHash].append(
                         [parentID, nameStart, nameEnd, contentStart, contentEnd])
                     lazyHash = 0
 
@@ -50,12 +51,53 @@ class Solution:
 
             counter += 1
         print(parents)
-        print(bySizeContents.keys())
+        print(sortedContents.keys())
 
-        print(bySizeContents)
+        print(sortedContents)
+
+        for size in sortedContents.keys():
+            for hashBracket in sortedContents.get(size).values():
+                while(len(hashBracket) > 1):
+                    # print(hashBracket.pop(0),"popping")
+                    inView = hashBracket.pop(0)
+                    pops = []
+                    compareIndex = 0
+                    for comparedTo in hashBracket:
+                        for i in range(size):
+                            print(paths[comparedTo[0]][comparedTo[3]+i])
+                            print(paths[inView[0]][inView[3]+i])
+                            if paths[inView[0]][inView[3]+i] != paths[comparedTo[0]][comparedTo[3]+i]:
+                                break
+                            if i == size-1:
+                                pops.append(compareIndex)
+                        compareIndex += 1
+                    print("POPS", pops)
+
+                    if len(pops) != 0:
+                        popShifter = 0
+                        for pop in pops:
+                            print(self.dataPrinter(parents, paths,
+                                                   hashBracket.pop(pop-popShifter)))
+                            popShifter += 1
+                        print(self.dataPrinter(parents, paths, inView))
+
+    def dataPrinter(self, parents, paths, data):
+        file = ""
+        for i in range(parents[data[0]]+1):
+            file += paths[data[0]][i]
+
+        file += '/'
+
+        for i in range(data[1], data[2]+1):
+            file += paths[data[0]][i]
+        # for i in range(data[1],data[2]):
+
+        return file
 
 
 sol = Solution()
 
-sol.findDuplicate(["root/a 1.txt(abcd) 2.txt(efgh)",
-                  "root/c 3.txt(abcd)", "root/c/d 4.txt(efgh)", "root 4.txt(efgh)"])
+# sol.findDuplicate(["root/a 1.txt(abcd) 2.txt(efgh)",
+#                   "root/c 3.txt(abcd)", "root/c/d 4.txt(efgh)", "root 4.txt(efgh)"])
+sol.findDuplicate(["root/a 1.txt(efgh) 2.txt(abcd)",
+                  "root/c 3.txt(abcd)", "root/c/d 4.txt(efhg)", "root 4.txt(efgh)", "root/r 2.txt(efgh)"])

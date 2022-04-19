@@ -48,3 +48,19 @@ So now picking this problem back up lets organize some of the things that I want
 
 
 I'm going to be lazy and add another layer besides size of categorization which I will dub, "lazy hash" which will simply add the value of each character into a singular value to further group the content of each file
+
+This ended up working pretty well as its a very passive way of hashing through our input without much more space or computation added in
+
+
+With our size and lazy hash we can turn the following input into the following structure
+
+input:<br>
+``["root/a 1.txt(abcd) 2.txt(efgh)","root/c 3.txt(abcd)", "root/c/d 4.txt(efgh)", "root 4.txt(efgh)"]``<br>
+
+output<br>
+``{4: {394: [[0, 0, 11, 13, 16], [1, 0, 11, 13, 16]], 410: [[0, 19, 23, 25, 28], [2, 0, 13, 15, 18], [3, 0, 9, 11, 14]]}}``
+
+notice how there is 1 key to the size layer, that is size '4', and 2 keys to the hash layer that is '394' and '410'
+
+
+Our hash isn't perfect though and thus we must compare the subdivided groups amongst themselves. This has the potential for the highest scaling runtime which is why I ended up adding the lazy hash to mitigate it. Further hash research and consideration would have to be done to get some better optimzation, something I'm thinking could be some sort of recursion or splitting up of the content
