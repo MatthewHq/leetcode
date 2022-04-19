@@ -1,3 +1,4 @@
+from binascii import Incomplete
 from numpy import size
 
 
@@ -11,10 +12,11 @@ class Solution:
         bySizeContents = {}
         counter = 0
         while(counter < len(paths)):
-            nameStart, nameEnd, contentStart, contentEnd = 0, 0, 0, 0
+            nameStart, nameEnd, contentStart, contentEnd, lazyHash = 0, 0, 0, 0, 0
             parentID = counter
             charCounter = 0
             parentFlag = False
+            inContent = 0
             while(charCounter < len(paths[counter])):
                 print(counter, paths[counter][charCounter])
                 if paths[counter][charCounter] == ' ':
@@ -26,17 +28,30 @@ class Solution:
                 elif paths[counter][charCounter] == '(':
                     nameEnd = charCounter-1
                     contentStart = charCounter+1
+                    inContent = 1
                 elif paths[counter][charCounter] == ')':
+                    inContent = 0
                     contentEnd = charCounter-1
                     contentSize = contentEnd-contentStart+1
-                    if bySizeContents.get(size) == None:
-                        bySizeContents[size] = []
-                    bySizeContents[size].append(
+                    if bySizeContents.get(contentSize) == None:
+                        bySizeContents[contentSize] = {}
+                    if bySizeContents.get(contentSize).get(lazyHash) == None:
+                        bySizeContents.get(contentSize)[lazyHash] = []
+
+                    bySizeContents[contentSize][lazyHash].append(
                         [parentID, nameStart, nameEnd, contentStart, contentEnd])
+                    lazyHash = 0
+
+                if inContent == 1:
+                    inContent = 2
+                elif inContent == 2:
+                    lazyHash += ord(paths[counter][charCounter])
                 charCounter += 1
 
             counter += 1
         print(parents)
+        print(bySizeContents.keys())
+
         print(bySizeContents)
 
 

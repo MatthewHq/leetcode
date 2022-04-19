@@ -45,3 +45,6 @@ So now picking this problem back up lets organize some of the things that I want
     2. Once all datapoints are collected, we go through ONLY the size sets that have more than one entry in the value double array<br>
        - potential for messing around with hashing but I don't know if I'll add that filter really  
     3. If they match add them to a similar "output" structure consisting of the same things that is just processed at the end, **with most of the space still in the actual input!!!**
+
+
+I'm going to be lazy and add another layer besides size of categorization which I will dub, "lazy hash" which will simply add the value of each character into a singular value to further group the content of each file
