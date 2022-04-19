@@ -64,3 +64,6 @@ notice how there is 1 key to the size layer, that is size '4', and 2 keys to the
 
 
 Our hash isn't perfect though and thus we must compare the subdivided groups amongst themselves. This has the potential for the highest scaling runtime which is why I ended up adding the lazy hash to mitigate it. Further hash research and consideration would have to be done to get some better optimzation, something I'm thinking could be some sort of recursion or splitting up of the content
+
+
+This solution ultimately is aimed towards bigger files where I'm not sure if you can even place bigger contents in a hashmap in an efficient way. Without doing some more research on hashmaps and their space complexcity with keys, it feels a little cheap just throwing a hashmap at it where its kinda doing the work for me at the low level of example inputs from the question, but in a real world solution I doubt a simple hashmap thrown at the problem would fix it, unless it was a specialized sort of hash, though I'd have to learn more about hashing at that level

@@ -1,11 +1,8 @@
-from binascii import Incomplete
-from pickle import POP
-from numpy import size
 
 
 class Solution:
     def findDuplicate(self, paths):
-
+        duplicates = []
         # was intially heistant to use len() but turns out its O(1)
 
         # [[parentID,namestart,nameEnd,contentStart,contentEnd]]
@@ -19,7 +16,7 @@ class Solution:
             parentFlag = True
             inContent = 0
             while(charCounter < len(paths[counter])):
-                print(counter, paths[counter][charCounter])
+                # print(counter, paths[counter][charCounter])
                 if paths[counter][charCounter] == ' ':
                     if parentFlag:
                         parentFlag = False
@@ -51,12 +48,16 @@ class Solution:
 
             counter += 1
         print(parents)
-        print(sortedContents.keys())
+        # print(sortedContents.keys())
 
         print(sortedContents)
+        # for size in sortedContents.keys():
+        #     print("testSize",size)
 
         for size in sortedContents.keys():
+            print("size",size)
             for hashBracket in sortedContents.get(size).values():
+                print("bracket",hashBracket)
                 while(len(hashBracket) > 1):
                     # print(hashBracket.pop(0),"popping")
                     inView = hashBracket.pop(0)
@@ -64,8 +65,8 @@ class Solution:
                     compareIndex = 0
                     for comparedTo in hashBracket:
                         for i in range(size):
-                            print(paths[comparedTo[0]][comparedTo[3]+i])
-                            print(paths[inView[0]][inView[3]+i])
+                            # print(paths[comparedTo[0]][comparedTo[3]+i])
+                            # print(paths[inView[0]][inView[3]+i])
                             if paths[inView[0]][inView[3]+i] != paths[comparedTo[0]][comparedTo[3]+i]:
                                 break
                             if i == size-1:
@@ -74,12 +75,21 @@ class Solution:
                     print("POPS", pops)
 
                     if len(pops) != 0:
+                        dupeBatch = []
                         popShifter = 0
                         for pop in pops:
-                            print(self.dataPrinter(parents, paths,
-                                                   hashBracket.pop(pop-popShifter)))
+                            justPopped = hashBracket.pop(pop-popShifter)
+                            dupeBatch.append(self.dataPrinter(
+                                parents, paths, justPopped))
+                            # print(self.dataPrinter(parents, paths, justPopped),
+                            #       self.contentPrinter(paths, justPopped))
                             popShifter += 1
-                        print(self.dataPrinter(parents, paths, inView))
+                        dupeBatch.append(self.dataPrinter(
+                            parents, paths, inView))
+                        # print(self.dataPrinter(parents, paths, inView),
+                        #       self.contentPrinter(paths, inView))
+                        duplicates.append(dupeBatch)
+        return duplicates
 
     def dataPrinter(self, parents, paths, data):
         file = ""
@@ -94,10 +104,22 @@ class Solution:
 
         return file
 
+    def contentPrinter(self, paths, data):
+        content = ""
+
+        for i in range(data[3], data[4]+1):
+            content += paths[data[0]][i]
+
+        return content
+
 
 sol = Solution()
 
-# sol.findDuplicate(["root/a 1.txt(abcd) 2.txt(efgh)",
-#                   "root/c 3.txt(abcd)", "root/c/d 4.txt(efgh)", "root 4.txt(efgh)"])
-sol.findDuplicate(["root/a 1.txt(efgh) 2.txt(abcd)",
-                  "root/c 3.txt(abcd)", "root/c/d 4.txt(efhg)", "root 4.txt(efgh)", "root/r 2.txt(efgh)"])
+# print(sol.findDuplicate(["root/a 1.txt(abcd) 2.txt(efgh)",
+#                   "root/c 3.txt(abcd)", "root/c/d 4.txt(efgh)", "root 4.txt(egfh) 5.txt(fgeh) 6.txt(egfh)"]))
+# sol.findDuplicate(["root/a 1.txt(efgh) 2.txt(abcd)",
+#                   "root/c 3.txt(abcd)", "root/c/d 4.txt(efhg)", "root 4.txt(efgh)", "root/r 2.txt(efgh)"])
+
+
+print(sol.findDuplicate(["root/a 1.txt(abcd) 2.txt(efsfgh) 3.txt(efsfgh)",
+      "root/c 3.txt(abdfcd)", "root/c/d 4.txt(efggdfh)"]))
