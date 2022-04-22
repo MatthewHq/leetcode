@@ -41,3 +41,10 @@ Looks like the O(n^2) DP method worked for the most part except I failed in cons
 After messing around in excel looks like for the incrementer to count upward, there needs to be a specific level of stepping that is valid which is either 2 down or two right at LEAST. 
 - Now I also realize there is another edge case to consider where two patterns of the same value are fighting for the top, how to detect against those, sometimes a value might have more than one pattern
     - Dove into this particular edge case and it opened up a ton of them that need to be handled, visualized it out on excel but sitting on solution considerations for a bit here.
+
+I am thinking of two approaches that might need to be combined or might be exclusive.
+1. One of the biggest properties is that once I know ONE difference, i can cache it's next awaited solution and see if I spot it in the future and cache the next one as i incremet etc 
+
+2. With the excel visualization I can save the coordinates of each difference when the difference is the same and track its lineage, it will have a feeling of a linkedlist of sorts.
+
+Looks like I'm going with the first approach combined with a hashmap because each anticipated number can be looked up this way and the "lineage" of a specific sequence can be caught in this manner without much else
