@@ -6,9 +6,11 @@
 
 
 
-arr=[1,2,3,4,5]
-print(range(len(arr)))
+arr=[1,2,3,3,4,5]
+# print(range(len(arr)))
 
-for i in range(len(arr)):
-    print(i)
+print(arr.index(3))
+
+# for i in range(len(arr)):
+    # print(i)
     # print(arr[i])
