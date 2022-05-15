@@ -1,9 +1,6 @@
 class Solution:
     def countVowelStrings(self, n: int) -> int:
         vowelChart=[[1,1,1,1,1]]
-        
-
-        
         for i in range(1,n):
             newRow=[]
             newRow.append(1)
@@ -12,8 +9,6 @@ class Solution:
                 rollingSum+=vowelChart[i-1][j]
                 newRow.append(rollingSum)
             vowelChart.append(newRow)
-        # print(vowelChart)
-
         return sum(vowelChart[n-1])
 
 
