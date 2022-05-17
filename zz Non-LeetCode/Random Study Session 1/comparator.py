@@ -10,11 +10,9 @@ class Player:
         return "{} {}".format(name, score)
 
     def comparator(a, b):
-        print(a,"a")
-        print(b,"b")
-        if a.score > b.score:
+        if a.score < b.score:
             return 1
-        elif a.score < b.score:
+        elif a.score > b.score:
             return -1
         elif a.score==b.score:
             if a.name>b.name:

@@ -3,7 +3,6 @@ def abbreviation(a, b):
     dp = []
     letterCountB = {}
     letterCheckA={}
-
     currRow = []
 
     # for i in range(len(b)):
