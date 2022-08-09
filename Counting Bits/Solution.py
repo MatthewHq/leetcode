@@ -3,8 +3,6 @@ class Solution:
         base=[0,1]
         if n==0:
             return [0]
-        # if base==1:
-        #     return base
         lastBracket=0
         bracketCheck=2
 

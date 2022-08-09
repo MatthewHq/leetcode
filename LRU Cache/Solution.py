@@ -9,46 +9,46 @@ class LRUCache:
         return None
 
     def get(self, key: int) -> int:
-        print("---get--")
-        print("size ",self.linked.size, "capacity ", self.capacity)
-        self.linked.print()
-        print(self.hashMap.keys())
-        print("get", key)
+        # print("---get--")
+        # print("size ",self.linked.size, "capacity ", self.capacity)
+        # self.linked.print()
+        # print(self.hashMap.keys())
+        # print("get", key)
         node = self.hashMap.get(key)
 
         if node != None:
             self.linked.refresh(node)
-            self.linked.print()
+            # self.linked.print()
             return self.hashMap.get(key).contents[1]
-        self.linked.print()
-        print(self.hashMap.keys())
+        # self.linked.print()
+        # print(self.hashMap.keys())
         return -1
     # IF IT ALREADY EXISTS AND WE ARE OVERWRITING WE NEED TO DELETE THE PRIOR
 
     def put(self, key: int, value: int) -> None:
-        print("---put--")
-        print("size ",self.linked.size, "capacity ", self.capacity)
-        self.linked.print()
-        print(self.hashMap.keys())
-        print("put", key, value)
+        # print("---put--")
+        # print("size ",self.linked.size, "capacity ", self.capacity)
+        # self.linked.print()
+        # print(self.hashMap.keys())
+        # print("put", key, value)
         node = Node([key, value])
         old = self.hashMap.get(key)
         if old != None:
-            print("old activated",old.contents)
+            # print("old activated",old.contents)
             self.linked.cut(old)
         self.hashMap[key] = node
         
         self.linked.append(node)
 
         if self.linked.size > self.capacity:
-            print("capacity: ", self.capacity,
-                  " | ", "size: ", self.linked.size)
+            # print("capacity: ", self.capacity,
+                #   " | ", "size: ", self.linked.size)
             remove = self.linked.pop()
             # print(remove, "HEREEEEEEEEEEEE")
             # print(self.hashMap)
             self.hashMap.pop(remove[0])
-        self.linked.print()
-        print(self.hashMap.keys())
+        # self.linked.print()
+        # print(self.hashMap.keys())
         return None
 
 
@@ -69,7 +69,7 @@ class LinkedList:
         self.size += 1
 
     def pop(self):
-        self.print()
+        # self.print()
         if self.size != 0:
             ret = self.head
             self.head = self.head.right
@@ -121,21 +121,21 @@ class LinkedList:
             ret.detach()
             self.append(ret)
 
-    def print(self):
-        counter=0
-        if self.size != 0:
-            current = self.head
-            total = []
-            while current != None:
-                total.append(current.contents)
-                if counter<10:
-                    print(current.contents)
-                    counter+=1
-                current = current.right
+    # def print(self):
+    #     counter=0
+    #     if self.size != 0:
+    #         current = self.head
+    #         total = []
+    #         while current != None:
+    #             total.append(current.contents)
+    #             if counter<10:
+    #                 print(current.contents)
+    #                 counter+=1
+    #             current = current.right
                 
-            print("List: ", total)
-        else:
-            print("List: []")
+            # print("List: ", total)
+        # else:
+            # print("List: []")
 
 
 class Node:
