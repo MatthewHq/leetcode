@@ -11,3 +11,8 @@
 ## Approach 1
 Can be done with sorted list
 - would need some sort of tag for start numbers and end numbers 
+  
+
+### Runtime
+- initial sort will be (nlogn)
+- 
