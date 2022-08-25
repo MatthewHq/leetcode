@@ -8,9 +8,17 @@ class Solution:
         userRRIndex = {}
         userRRContent = {}
 
+        orderKey={}
+        orderTS=timestamp.copy()
+        orderTS.sort()
+
+        for i in range(len(timestamp)):
+            orderKey[timestamp[i]]=i
+
         for i in range(len(username)):
-            cUser = username[i]
-            cWeb = website[i]
+            x=orderKey[orderTS[i]]
+            cUser = username[x]
+            cWeb = website[x]
             if self.hashProc(userRRIndex, cUser, 0) == None:
                 userRRIndex[cUser] =userRRIndex[cUser]+ 1
             # print(userRRIndex[cUser], userRRIndex[cUser] % 3)
@@ -28,10 +36,10 @@ class Solution:
                 if len(userRRContent[cUser]) == 3:
                     pattern = ""
                     # print("OKAY LOOPING ON ",userRRContent)
-                    for i in range(3):
-                        x = (userRRIndex[cUser]+i+1) % 3
+                    for j in range(3):
+                        z = (userRRIndex[cUser]+j+1) % 3
                         
-                        pattern += userRRContent[cUser][x]+","
+                        pattern += userRRContent[cUser][z]+","
                         newSet = set()
                     # print("RESULT",pattern)
                     pattern = pattern[0:len(pattern)-1]
@@ -74,6 +82,10 @@ website = ["a", "b", "a", "a", "b", "c"]
 username = ["uA", "uA", "uA", "uB", "uB", "uB"]
 timestamp = [1, 2, 3, 4, 5, 6]
 website = ["a", "b", "a", "a", "b", "c"]
+
+username = ["dowg","dowg","dowg"]
+timestamp =[158931262,562600350,148438945]
+website = ["y","loedo","y"]
 
 
 sol = Solution()
