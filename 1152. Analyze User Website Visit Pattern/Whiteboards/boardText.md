@@ -10,6 +10,8 @@
 
 ## Edge Cases
 - [ ] Timestamps are out of order?
+- [ ] Visiting patter can count nonconsecutive visits ie
+  - [a,b,c,d] produces [a,b,c] and [a,c,d] and [a,b,d]
 
 ## Approach
 
@@ -19,4 +21,9 @@ As each entry is processed, a **hashmap** will be used to retain the pattern sco
   - The hashmap will comprise of <Pattern : SET() of users>
 
 - Highscore: will be kept in a list that can contain multiple entries
+
+
+
+Building round robin username structure
+
 
