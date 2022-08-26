@@ -39,21 +39,22 @@ class Solution:
         for user in userRRContent.keys():
             # print(userRRContent)
             patterns=self.allPatterns(userRRContent[user])
-            for pat in patterns:
-                pattern=""
-                for patCandidate in pat:
-                    pattern += patCandidate+","
-                pattern = pattern[0:len(pattern)-1]
-                newSet=set()
-                self.hashProc(mainHash, pattern, newSet)
-                mainHash[pattern].add(cUser)
-                if len(mainHash[pattern]) >= highScore:
-                    if len(mainHash[pattern]) > highScore:
-                        scoreBoard.clear()
-                    highScore = len(mainHash[pattern])
-                    scoreBoard.append(pattern)
+            if patterns!=None:
+                for pat in patterns:
+                    pattern=""
+                    for patCandidate in pat:
+                        pattern += patCandidate+","
+                    pattern = pattern[0:len(pattern)-1]
+                    newSet=set()
+                    self.hashProc(mainHash, pattern, newSet)
+                    mainHash[pattern].add(user)
+                    if len(mainHash[pattern]) >= highScore:
+                        if len(mainHash[pattern]) > highScore:
+                            scoreBoard.clear()
+                        highScore = len(mainHash[pattern])
+                        scoreBoard.append(pattern)
                 
-        # scoreBoard.sort()
+        scoreBoard.sort()
         # print(userRRContent)
         # print("mainhash",mainHash)
         # print(scoreBoard)
@@ -88,6 +89,10 @@ timestamp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 website = ["home", "about", "career", "home", "cart",
            "maps", "home", "home", "about", "career"]
 
+username = ["uod","uod","uod","kfuagsh","uod"]
+timestamp =[520778108,799976888,522803143,968158505,908405336]
+website =  ["bfx","taohbuuleq","vsryf","irmbcoebt","bfx"]
+
 
 # username = ["ua", "ua", "ua", "ub", "ub", "ub"]
 # timestamp = [1, 2, 3, 4, 5, 6]
@@ -97,6 +102,11 @@ website = ["home", "about", "career", "home", "cart",
 # username = ["uA", "uA", "uA", "uB", "uB", "uB"]
 # timestamp = [1, 2, 3, 4, 5, 6]
 # website = ["a", "b", "a", "a", "b", "c"]
+
+
+# username = ["ua","ua","ua","ub","ub","ub"]
+# timestamp = [1,2,3,4,5,6]
+# website = ["a","b","c","a","b","a"]
 
 # username = ["dowg","dowg","dowg"]
 # timestamp =[158931262,562600350,148438945]
