@@ -26,4 +26,23 @@ As each entry is processed, a **hashmap** will be used to retain the pattern sco
 
 Building round robin username structure
 
+## New Approach
+
+A restructure must be done after the realization that Visiting patter can count nonconsecutive visits ie
+  - [a,b,c,d] produces [a,b,c] and [a,c,d] and [a,b,d]
+
+----
+Current Code FLow
+
+- Ini Variables
+- Ordered Timestamp System
+- Modulo 3 System combined with pattern registration
+
+New Target Code FLow
+- Ini Variables
+- Ordered Timestamp System
+- Pattern **candidate** registration per **username**
+- Pattern processing per username
+
+
 

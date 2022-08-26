@@ -1,17 +1,15 @@
 class Solution:
     def mostVisitedPattern(self, username, timestamp, website):
-        # we will begin with the assumption that timestamp is always in order, it only makes sense
         mainHash = {}
         highScore = 0
         scoreBoard = []
 
-        userRRIndex = {}
         userRRContent = {}
 
         orderKey={}
         orderTS=timestamp.copy()
         orderTS.sort()
-        print("orderTS",orderTS)
+        # print("orderTS",orderTS)
 
         for i in range(len(timestamp)):
             orderKey[timestamp[i]]=i
@@ -19,45 +17,60 @@ class Solution:
         for i in range(len(username)):
             
             x=orderKey[orderTS[i]]
-            print("STARTING THIS ENTRY",username[x],timestamp[x],website[x])
             cUser = username[x]
             cWeb = website[x]
-            if self.hashProc(userRRIndex, cUser, 0) == None:
-                userRRIndex[cUser] =userRRIndex[cUser]+ 1
-            # print(userRRIndex[cUser], userRRIndex[cUser] % 3)
             if self.hashProc(userRRContent, cUser, [cWeb]) == None:
-                # print(timestamp[i],userRRIndex,"EY")
-                # print("User and Length", cUser, len(
-                # userRRContent[cUser]), userRRContent[cUser])
-                if len(userRRContent[cUser]) == 3:
-                    # print("ENTERED")
-                    userRRContent[cUser][userRRIndex[cUser] % 3] = cWeb
-                else:
-                    # print("appending", cUser, userRRContent[cUser])
-                    userRRContent[cUser].append(cWeb)
-
-                if len(userRRContent[cUser]) == 3:
-                    pattern = ""
-                    print("OKAY LOOPING ON ",userRRContent)
-                    for j in range(3):
-                        z = (userRRIndex[cUser]+j+1) % 3
+                userRRContent[cUser].append(cWeb)
+                # if len(userRRContent[cUser]) == 3:
+                #     pattern = ""
+                #     for j in range(3):
+                #         z = (userRRIndex[cUser]+j+1) % 3
                         
-                        pattern += userRRContent[cUser][z]+","
-                        newSet = set()
-                    print("RESULT",pattern)
-                    pattern = pattern[0:len(pattern)-1]
-                    self.hashProc(mainHash, pattern, newSet)
-                    mainHash[pattern].add(cUser)
-                    if len(mainHash[pattern]) >= highScore:
-                        if len(mainHash[pattern]) > highScore:
-                            scoreBoard.clear()
-                        highScore = len(mainHash[pattern])
-                        scoreBoard.append(pattern)
-        scoreBoard.sort()
-        print(mainHash)
-        print(scoreBoard)
-        print(highScore)
+                #         pattern += userRRContent[cUser][z]+","
+                #         newSet = set()
+                #     pattern = pattern[0:len(pattern)-1]
+                #     self.hashProc(mainHash, pattern, newSet)
+                #     mainHash[pattern].add(cUser)
+                #     if len(mainHash[pattern]) >= highScore:
+                #         if len(mainHash[pattern]) > highScore:
+                #             scoreBoard.clear()
+                #         highScore = len(mainHash[pattern])
+                #         scoreBoard.append(pattern)
+        for user in userRRContent.keys():
+            # print(userRRContent)
+            patterns=self.allPatterns(userRRContent[user])
+            for pat in patterns:
+                pattern=""
+                for patCandidate in pat:
+                    pattern += patCandidate+","
+                pattern = pattern[0:len(pattern)-1]
+                newSet=set()
+                self.hashProc(mainHash, pattern, newSet)
+                mainHash[pattern].add(cUser)
+                if len(mainHash[pattern]) >= highScore:
+                    if len(mainHash[pattern]) > highScore:
+                        scoreBoard.clear()
+                    highScore = len(mainHash[pattern])
+                    scoreBoard.append(pattern)
+                
+        # scoreBoard.sort()
+        # print(userRRContent)
+        # print("mainhash",mainHash)
+        # print(scoreBoard)
+        # print(highScore)
         return scoreBoard[0].split(",")
+
+    def allPatterns(self,candidates):
+        if len(candidates) < 3:
+            return None
+        inds = [0, 1, 2]
+        result = []
+        for i1 in range(len(candidates)-2):
+            for i2 in range(i1+1, len(candidates)-1):
+                for i3 in range(i2+1, len(candidates)):
+                    # print(i1, i2, i3)
+                    result.append([candidates[i1],candidates[i2],candidates[i3]])
+        return result
 
     def hashProc(self, hash, key, valEmpt):
         result = None
@@ -76,22 +89,22 @@ website = ["home", "about", "career", "home", "cart",
            "maps", "home", "home", "about", "career"]
 
 
-username = ["ua", "ua", "ua", "ub", "ub", "ub"]
-timestamp = [1, 2, 3, 4, 5, 6]
-website = ["a", "b", "a", "a", "b", "c"]
+# username = ["ua", "ua", "ua", "ub", "ub", "ub"]
+# timestamp = [1, 2, 3, 4, 5, 6]
+# website = ["a", "b", "a", "a", "b", "c"]
 
 
-username = ["uA", "uA", "uA", "uB", "uB", "uB"]
-timestamp = [1, 2, 3, 4, 5, 6]
-website = ["a", "b", "a", "a", "b", "c"]
+# username = ["uA", "uA", "uA", "uB", "uB", "uB"]
+# timestamp = [1, 2, 3, 4, 5, 6]
+# website = ["a", "b", "a", "a", "b", "c"]
 
-username = ["dowg","dowg","dowg"]
-timestamp =[158931262,562600350,148438945]
-website = ["y","loedo","y"]
+# username = ["dowg","dowg","dowg"]
+# timestamp =[158931262,562600350,148438945]
+# website = ["y","loedo","y"]
 
-username = ["zkiikgv","zkiikgv","zkiikgv","zkiikgv"]
-timestamp =[436363475,710406388,386655081,797150921]
-website =  ["wnaaxbfhxp","mryxsjc","oz","wlarkzzqht"]
+# username = ["zkiikgv","zkiikgv","zkiikgv","zkiikgv"]
+# timestamp =[436363475,710406388,386655081,797150921]
+# website =  ["wnaaxbfhxp","mryxsjc","oz","wlarkzzqht"]
 
 sol = Solution()
 print(sol.mostVisitedPattern(username, timestamp, website))
