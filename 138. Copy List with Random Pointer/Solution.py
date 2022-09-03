@@ -46,7 +46,7 @@ class Solution:
         combo = []
         for i in range(len(randoms)):
             combo.append(nodeKeys[randoms[i]])
-        print(combo)
+        # print(combo)
         
         x = 0
         current=newHead
@@ -55,8 +55,8 @@ class Solution:
             x += 1
             current = current.next
 
-        self.printList(newHead)
-        self.printList(head)
+        # self.printList(newHead)
+        # self.printList(head)
         return newHead
 
     def printList(self, head):
