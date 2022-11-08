@@ -85,6 +85,20 @@ class Solution:
         return self.result
 
 
-sol = Solution()
-sol.generateParenthesis(2)
-print(sol.result)
+
+import time
+times={}
+for x in range(10):
+    for i in range(10,13):
+        start_time = time.time()
+
+        sol = Solution()
+        sol.generateParenthesis(i)
+        if times.get(i)==None:
+            times[i]=time.time() - start_time
+        else:
+            times[i]+=time.time() - start_time
+        # print("--- %s seconds ---" % (time.time() - start_time) + str(i))
+
+for i in times.keys():
+    print(i,times[i])
