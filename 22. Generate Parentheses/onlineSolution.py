@@ -1,6 +1,8 @@
 class Solution(object):
     def generateParenthesis(self, n: int):
         def dfs(left, right, s):
+            # print("[{0}|= {2} =|{1}]".format(left,right,s))
+            print("{2}".format(left,right,s))
             if len(s) == n * 2:
                 res.append(s)
                 return
@@ -34,4 +36,5 @@ class Solution(object):
 
 
 sol = Solution()
-sol.generateParenthesis(3)
+print(sol.generateParenthesis(3))
+
