@@ -8,17 +8,23 @@ class ListNode:
 class Solution:
     def isPalindrome(self, head) -> bool:
         length = self.countLength(head)
+
+        if length == 1:
+            return True
+        if length == 2:
+            return head.val == head.next.val
+
         half = int(length/2)
         isOdd = length % 2 == 1
 
         self.skipRange = None
         halfHead = self.getHalfHead(head, half, isOdd)
         print(halfHead.val, "HALF HEAD VAL")
-        reversedHead=self.reverse(halfHead, half, length)
+        reversedHead = self.reverse(halfHead, half, length)
         print("readingReversedHead")
         self.readHead(reversedHead)
 
-
+        return self.finalComparison(head,reversedHead)
 
     def countLength(self, head):
         count = 0
@@ -31,7 +37,7 @@ class Solution:
     def getHalfHead(self, head, half, isOdd):
         current = head
         self.skipRange = half + 1 if isOdd else half
-        print("skiprange",self.skipRange)
+        print("skiprange", self.skipRange)
         for i in range(self.skipRange):
             current = current.next
         return current
@@ -39,49 +45,63 @@ class Solution:
     def reverse(self, halfHead, half, length):
         halfLength = length-self.skipRange
 
-        #if halflength is 3 or more:
+        if halfLength == 1:
+            return halfHead
+        elif halfLength == 2:
+            newHead = halfHead.next
+            newHead.next = halfHead
+            halfHead.next = None
+            return newHead
+
+        elif halfLength > 2:
+            # if halflength is 3 or more:
             # reversing something of size 3 or higher
-        currentSlot = halfHead
-        holding=None
-        print("halfLength-2",halfLength-2)
-        for i in range(halfLength-2):
-            print("iteration in reverse")
+            currentSlot = halfHead
+            holding = None
+            print("halfLength-2", halfLength-2)
             referenced = currentSlot
             modified = currentSlot.next
-            holding = modified.next
-
-            if i==0:
-                referenced.next=None
+            holding = currentSlot.next.next
+            referenced.next = None
 
             modified.next = referenced
+            currentSlot = modified
 
-            currentSlot=currentSlot.next
-    
+            for i in range(halfLength-3):
+                print("iteration in reverse")
+                referenced = modified
+                modified = holding
+                holding = holding.next
+                modified.next = referenced
+                currentSlot = modified
+            holding.next = currentSlot
+            return holding
 
+    def finalComparison(self, head, halfHead):
+        while halfHead != None:
+            if head.val != halfHead.val:
+                return False
+            head=head.next
+            halfHead=halfHead.next
         
+        return True
+                
 
-    def readHead(self,head):
-        current=head
-        while current!=None:
+    def readHead(self, head):
+        current = head
+        while current != None:
             print(current.val)
-            current=current.next
+            current = current.next
         print("Done Reading")
-    
-    def createLL(self,arr):
+
+    def createLL(self, arr):
         arr.reverse()
-        end=ListNode(arr[0])
-        current=end
-        for i in range(1,len(arr)):
-            newest=ListNode(arr[i],current)
-            current=newest
+        end = ListNode(arr[0])
+        current = end
+        for i in range(1, len(arr)):
+            newest = ListNode(arr[i], current)
+            current = newest
         return current
-
-
-
-
-
-        
-
 
     # has to be at least 3 long FOR ONE OF THE HALVES,
     # So what about length of 6 and below? What about 6
@@ -106,9 +126,14 @@ L6 = ListNode(3, L5)
 L7 = ListNode(2, L6)
 L8 = ListNode(1, L7)
 
-
-arr=[1,2,3,4,5,6]
-myLL=sol.createLL(arr)
+arr = [1, 2, 3]
+arr = [1]
+arr=[1,2,2,1]
+arr=[1,1,2,3,1]
+# arr=[1,2,3,4,5,6]
+# arr=[1,2,3,4,5,6,7,8]
+# arr=[1,2,3,4,5,6,7,8,9]
+myLL = sol.createLL(arr)
 sol.readHead(myLL)
 
 
