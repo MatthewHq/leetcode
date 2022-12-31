@@ -19,10 +19,10 @@ class Solution:
 
         self.skipRange = None
         halfHead = self.getHalfHead(head, half, isOdd)
-        print(halfHead.val, "HALF HEAD VAL")
+        # print(halfHead.val, "HALF HEAD VAL")
         reversedHead = self.reverse(halfHead, half, length)
-        print("readingReversedHead")
-        self.readHead(reversedHead)
+        # print("readingReversedHead")
+        # self.readHead(reversedHead)
 
         return self.finalComparison(head,reversedHead)
 
@@ -37,7 +37,7 @@ class Solution:
     def getHalfHead(self, head, half, isOdd):
         current = head
         self.skipRange = half + 1 if isOdd else half
-        print("skiprange", self.skipRange)
+        # print("skiprange", self.skipRange)
         for i in range(self.skipRange):
             current = current.next
         return current
