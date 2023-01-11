@@ -25,16 +25,26 @@ import sys
 # doing direction id
 #
 class WordSlot():
-    def __init__(self,id):
+    def __init__(self,id,pairs,type):
         self.id=id
+        self.type=type
         self.connections=[]
+        self.start=pairs[0]
+        self.end=pairs[1]
+        self.length=None
+    def __repr__(self):
+        return "({},{} | {})".format(self.start,self.end,self.connections)
+        
 
 class Connection():
-    def __init__(self):
-        self.ownerId=None #wordSlot ID
-        self.connectedTo=None #id of who the owner is connected to
+    def __init__(self,ownerId,connectedTo,location):
+        self.ownerId=ownerId #wordSlot ID
+        self.connectedTo=connectedTo #id of who the owner is connected to
+        self.location=location
         self.ownerSlot=None #at which location in the word is the junction
         self.connectedSlot=None #at which location in the word is the junction
+    def __repr__(self):
+        return "({}<->{})".format(self.ownerId,self.connectedTo)
 
 class End():
     def __init__(self,type,coords):
@@ -48,6 +58,7 @@ class End():
         return "{} @{}".format(self.type,self.coords)
 
 def crosswordPuzzle(crossword, words):
+    idTracker=[0]
     visited = {}
     for x in range(10):
         for y in range(10):
@@ -57,7 +68,7 @@ def crosswordPuzzle(crossword, words):
     ends = []
     while len(visited) > 0:
         coordTuple = visited.popitem()[0]
-        print("popped", coordTuple)
+        # print("popped", coordTuple)
         recursiveExplore(coordTuple, crossword, visited,ends)
         
     print(ends)
@@ -81,34 +92,53 @@ def crosswordPuzzle(crossword, words):
     
     print("HORIZONTAL",horizontal)
     print("VERTICAL",vertical)
+    
+    horizontalSlots={}
+    verticalSlots={}
+
+    getPairs(horizontal,1,horizontalSlots,idTracker)
+    
     print("HORIZONTAL")
-    horizontalPairs=getPairs(horizontal,1)
+    print("id tracker",idTracker)
+    
+
+    getPairs(vertical,0,verticalSlots,idTracker)
+    
     print("VERTICAL")
-    verticalPairs=getPairs(vertical,0)
+    print("id tracker",idTracker)
 
-    print(horizontalPairs,"\m",verticalPairs)
-    for hpair in horizontalPairs:
-        for vpair in verticalPairs:
+    print(horizontalSlots,"\n",verticalSlots)
+
+
+
+    
+    for hpair in horizontalSlots.values():
+        for vpair in verticalSlots.values():
             intersects(hpair,vpair)
+    
+    print(horizontalSlots,"\n",verticalSlots)
 
 
-def intersects(h,v):
+def intersects(hSlot,vSlot):
     intersects=[]
-    print(h[0][0],v[0][0],v[1][0],"AND",v[0][1],h[0][1],h[1][1])
+    h=(hSlot.start,hSlot.end)
+    v=(vSlot.start,vSlot.end)
+    # print(h[0][0],v[0][0],v[1][0],"AND",v[0][1],h[0][1],h[1][1])
     if h[0][0]>= v[0][0] and h[0][0]<=v[1][0] and v[0][1]>=h[0][1] and v[0][1]<=h[1][1]:
         intersects.append((h[0][0],v[0][1]))
-        print("INTERSECT",intersects)
+        hSlot.connections.append(Connection(hSlot.id,vSlot.id,(h[0][0],v[0][1])))
+        vSlot.connections.append(Connection(vSlot.id,hSlot.id,(h[0][0],v[0][1])))
+        
     
 
 
-
-def getPairs(dict,lam):
+def getPairs(dict,lam,slotBank,idTracker):
     print("dictprint",dict)
     print("dictkeys",dict.keys())
-    pairs=[]
+    # pairs=[]
     for lineArrs in dict.values():
         pair=[]
-        print("lineArrs",lineArrs)
+        # print("lineArrs",lineArrs)
         if len(lineArrs)>2:
             lineArrs.sort(key=lambda x:x[1])
             print(lineArrs)
@@ -116,22 +146,28 @@ def getPairs(dict,lam):
             while len(lineArrs)>2:
                 pair.append(lineArrs.pop(0))
                 if len(pair)==2:
-                    pairs.append(pair.copy())
+                    slotBank[idTracker[0]]=WordSlot(idTracker[0],pair.copy(),lam)
+                    idTracker[0]+=1
+                    # pairs.append(pair.copy())
                     pair.clear()
-            pairs.append(lineArrs)
-            print("postPOP",lineArrs)
-            print("postPOP",dict)
+            slotBank[idTracker[0]]=WordSlot(idTracker[0],lineArrs,lam)
+            idTracker[0]+=1
+            # pairs.append(lineArrs)
+            # print("postPOP",lineArrs)
+            # print("postPOP",dict)
         else:
             lineArrs.sort(key=lambda x:x[lam])
-            pairs.append(lineArrs)
-    return pairs
+            slotBank[idTracker[0]]=WordSlot(idTracker[0],lineArrs,lam)
+            idTracker[0]+=1
+            # pairs.append(lineArrs)
+    # return pairs
         
 
 
 def recursiveExplore(coords, crossword, visited,ends):
     if visited.get(coords) != None:
         del visited[coords]
-    print("RECURSING ON",coords)
+    # print("RECURSING ON",coords)
     if crossword[coords[0]][coords[1]] == "-":
         for i in range(4):
             peekInto = move(coords, i)
