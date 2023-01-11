@@ -146,4 +146,6 @@ input1 = "++++++++++"+"\n"+"+------+++"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"
     "\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
 hrInput = input2Arr(input1)
 
+
+
 crosswordPuzzle(hrInput[0], hrInput[1])

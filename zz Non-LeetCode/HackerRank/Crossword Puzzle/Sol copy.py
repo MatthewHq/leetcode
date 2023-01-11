@@ -31,20 +31,20 @@ class WordSlot():
         self.connections=[]
         self.start=pairs[0]
         self.end=pairs[1]
-        self.length=None
+        self.length=self.end[type]-self.start[type]+1
     def __repr__(self):
-        return "({},{} | {})".format(self.start,self.end,self.connections)
+        return "({},{} L:{} | {})".format(self.start,self.end,self.length,self.connections)
         
 
 class Connection():
-    def __init__(self,ownerId,connectedTo,location):
+    def __init__(self,ownerId,connectedTo,location,ownerSlot,connectedSlot):
         self.ownerId=ownerId #wordSlot ID
         self.connectedTo=connectedTo #id of who the owner is connected to
         self.location=location
-        self.ownerSlot=None #at which location in the word is the junction
-        self.connectedSlot=None #at which location in the word is the junction
+        self.ownerSlot=ownerSlot #at which location in the word is the junction
+        self.connectedSlot=connectedSlot #at which location in the word is the junction
     def __repr__(self):
-        return "({}<->{})".format(self.ownerId,self.connectedTo)
+        return "({}@{}<->{}@{})".format(self.ownerSlot,self.ownerId,self.connectedTo,self.connectedSlot)
 
 class End():
     def __init__(self,type,coords):
@@ -70,6 +70,7 @@ def crosswordPuzzle(crossword, words):
         coordTuple = visited.popitem()[0]
         # print("popped", coordTuple)
         recursiveExplore(coordTuple, crossword, visited,ends)
+        
         
     print(ends)
     print(visited)
@@ -117,7 +118,26 @@ def crosswordPuzzle(crossword, words):
             intersects(hpair,vpair)
     
     print(horizontalSlots,"\n",verticalSlots)
+    
+    allSlots={}
+    for hslot in horizontalSlots.values():
+        allSlots[hslot.id]=hslot
 
+    for vslot in verticalSlots.values():
+        allSlots[vslot.id]=vslot
+
+    print(allSlots)
+    
+    visitedSlots={}
+    for slotId in allSlots.keys():
+        if visitedSlots.get(slotId)==None:
+            print("-------------------------Start at",slotId)
+            sol=recursiveWordFill([i for i in range(len(words))],words,slotId,allSlots,visitedSlots,{})
+    #wordIdBank,words,slotId,slotBank,visitedSlots,assigned):
+
+
+def addSlot(slot,dict):
+    dict[slot.id]=slot
 
 def intersects(hSlot,vSlot):
     intersects=[]
@@ -126,8 +146,10 @@ def intersects(hSlot,vSlot):
     # print(h[0][0],v[0][0],v[1][0],"AND",v[0][1],h[0][1],h[1][1])
     if h[0][0]>= v[0][0] and h[0][0]<=v[1][0] and v[0][1]>=h[0][1] and v[0][1]<=h[1][1]:
         intersects.append((h[0][0],v[0][1]))
-        hSlot.connections.append(Connection(hSlot.id,vSlot.id,(h[0][0],v[0][1])))
-        vSlot.connections.append(Connection(vSlot.id,hSlot.id,(h[0][0],v[0][1])))
+        hlength=v[0][1]-hSlot.start[1]
+        vlength=h[0][0]-vSlot.start[0]
+        hSlot.connections.append(Connection(hSlot.id,vSlot.id,(h[0][0],v[0][1]),hlength,vlength))
+        vSlot.connections.append(Connection(vSlot.id,hSlot.id,(h[0][0],v[0][1]),vlength,hlength))
         
     
 
@@ -162,6 +184,48 @@ def getPairs(dict,lam,slotBank,idTracker):
             # pairs.append(lineArrs)
     # return pairs
         
+def recursiveWordFill(wordIdBank,words,slotId,slotBank,visitedSlots,assigned):
+    print("=====wib",wordIdBank)
+    visitedSlots[slotId]=True
+    print(visitedSlots)
+    slot=slotBank[slotId]
+    for wordId in wordIdBank:
+        print("=inr wib",slot.id,wordIdBank)
+        print("????{} {} on {} :slot {}".format(slot.id,words[wordId],slot.length,slot.id))
+        if len(words[wordId])==slot.length: #slot and word LENGTH work
+            working=True
+            print("{} WORKS in len on {} !!!".format(words[wordId],slot.length))
+            for connection in slot.connections:#check connections
+                if assigned.get(connection.connectedTo)!=None:
+                    if words[assigned.get(connection.connectedTo)][connection.connectedSlot]!=words[wordId][connection.ownerSlot]:
+                        print("{} on {}, Connection fail on {}-{}!={}-{} !!!".format(words[wordId],
+                        slot.length,
+                        words[assigned.get(connection.connectedTo)],
+                        words[assigned.get(connection.connectedTo)][connection.connectedSlot],
+                        words[wordId][connection.connectedSlot],
+                        words[wordId]))
+                        working=False
+                        break
+                        
+            if working:
+                assigned[slotId]=wordId
+                copyWIB=wordIdBank.copy() #inefficieny point?
+                copyWIB.remove(wordId)
+                print(assigned)
+                for connection in slot.connections:
+                    print("CONNECTIONS OF ",slot.id)
+                    if visitedSlots.get(connection.connectedTo)==None:
+                       sol=recursiveWordFill(copyWIB,words,connection.connectedTo,slotBank,visitedSlots.copy(),assigned.copy())
+                    #    if sol !=None:
+                        # for value in sol.values():
+                        #     if value in copyWIB:
+                        #         copyWIB.remove(value)
+                return assigned
+            #check slot connections
+                #if null slot connection neighbor it passes
+    return None
+            
+
 
 
 def recursiveExplore(coords, crossword, visited,ends):
@@ -230,6 +294,6 @@ input1 = "++++++++++"+"\n"+"+------+++"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"
 
 input2="++++++++++"+"\n"+"+-----+---"+"\n"+"+++-++++++ "+"\n"+"+++-++++++ "+"\n"+"+++-----++ "+"\n"+"+++-++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
 input3="++++++++++"+"\n"+"+-----+--+"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"+"+++-----++"+"\n"+"+++-++-+++"+"\n"+"++++++-+++"+"\n"+"++++++-+++"+"\n"+"+-++++-+++"+"\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
-hrInput = input2Arr(input3)
+hrInput = input2Arr(input1)
 
 crosswordPuzzle(hrInput[0], hrInput[1])
