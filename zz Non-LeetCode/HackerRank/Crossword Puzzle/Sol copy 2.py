@@ -121,12 +121,104 @@ def crosswordPuzzle(crossword, words):
     
     allSlots={}
     slotBySize={}
-    wordsBySize={}
     concatenateSlots(horizontalSlots,allSlots,slotBySize)
     concatenateSlots(verticalSlots,allSlots,slotBySize)
     wordsBySize=getWordsBySize(words)
+    wordJunctionMap=getWordJunctionMap(words)
+    
     print(allSlots)
     print(slotBySize)
+    print(wordsBySize)
+    print(wordJunctionMap)
+    visited={}
+    for slot in allSlots.values():
+        visited[slot.id]=False
+
+    availableWords={}
+    for i in range(len(words)):
+        availableWords[i]=True
+    
+    print("visited",visited)
+
+
+    
+
+    pathOutline=recursiveLayerGuess(wordJunctionMap,visited,0,availableWords,allSlots,words,wordsBySize,{})
+
+    print(pathOutline)
+
+
+#solution: visited,usedwords,stringPath
+def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlots,words,wordsBySize,path,wordTarget=None):
+    
+    localSol=[visited,availableWords,path]
+    
+    potentialWords=[]
+
+    if wordTarget==None:
+
+        #for each possibility, recurse. Ignore used words
+        for wordOfSize in wordsBySize[allSlots[slotTarget].length]:
+            if availableWords.get(wordOfSize)==True: #Ignore used words
+                availableWords[wordOfSize]=False#tag used word
+                print("CALLED IN A",visited,wordOfSize,slotTarget,wordsBySize[allSlots[slotTarget].length])
+                markvisited(visited,slotTarget)
+                solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),slotTarget,availableWords.copy(),allSlots,words,wordsBySize,path.copy(),wordOfSize)
+                #break? i dont think so because if fails in future
+                if solution!=None:
+                    mergeSol(localSol,solution,visited,availableWords,path)
+    else:
+        path[slotTarget]=wordTarget
+
+
+    #for each connection, recurse, ignore visited
+    for connection in allSlots[slotTarget].connections:
+        
+        if visited.get(connection.connectedTo)==False:
+            print("CALLED IN B")
+            # print(wordTarget)
+            # print(wordJunctionMap)
+            # print(path)
+            # print(path[connection.ownerId])
+            # print(wordJunctionMap[len(words[path[connection.ownerId]])])
+            # print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
+            # print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
+            potentials=wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot))
+            if potentials!=None:
+                for potentialWord in potentials:
+                    solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),connection.connectedTo,availableWords.copy(),allSlots,words,wordsBySize,path.copy(),potentialWord)
+                    #break? i dont think so because if fails in future
+                    if solution!=None:
+                        mergeSol(localSol,solution,visited,availableWords,path)
+            else:
+                return None
+
+    # if len(visited)==len(allSlots):
+    #     return localSol
+
+    allFalse=True
+    for slotId in visited.keys():
+        if not visited[slotId]:
+            print("CALLED IN C")
+            print("{} {} PATH|{}|".format(visited,availableWords,path))
+            solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),slotId,availableWords.copy(),allSlots,words,wordsBySize,path.copy())
+            if solution!=None:
+                mergeSol(localSol,solution,visited,availableWords,path)
+            allFalse=False
+    if allFalse:
+        return localSol
+    
+def markvisited(visited,slotTarget):
+    if visited.get(slotTarget)==False:
+        visited[slotTarget]=True
+    else:
+        print("VISITING AGAIN? ERROR ERROR ERROR ERROR")
+
+def mergeSol(local,new,visited,usedWords,path):
+    visited=new[0]
+    availableWords=new[1]
+    path=new[2]
+
 
 def concatenateSlots(raw,all,bysize):
     for slot in raw.values():
@@ -136,27 +228,34 @@ def concatenateSlots(raw,all,bysize):
         else:
             bysize[slot.length].append(slot.id)
 
+def getWordJunctionMap(words):
+    jmap={}
+    for w in range(len(words)):
+        word = words[w]
+        size=len(word)
+        for i in range(size):
+            c=word[i]
+            if jmap.get(size)==None:
+                jmap[size]={(c,i):[w]}
+            elif jmap.get(size).get((c,i))==None:
+                jmap[size][(c,i)]=[w]
+            else:
+                jmap[size][(c,i)].append(w)
+    return jmap
+
 def getWordsBySize(words):
     bySize={}
-    for word in words:
+    for i in range(len(words)):
+        word=words[i]
         if bySize.get(len(word))==None:
-            bySize[len(word)]=[word]
+            bySize[len(word)]=[i]
         else:
-            bySize[len(word)].append(word)
+            bySize[len(word)].append(i)
     return bySize
         
-    
-    # visitedSlots={}
-    # for slotId in allSlots.keys():
-    #     if visitedSlots.get(slotId)==None:
-    #         print("-------------------------Start at",slotId)
-    #         sol=recursiveWordFill([i for i in range(len(words))],words,slotId,allSlots,visitedSlots,{})
-    #wordIdBank,words,slotId,slotBank,visitedSlots,assigned):
 
-def recursiveLayerGuess(allSlots,slotBySize,words,wordsBySize):
-    
 
-        
+
 
 def addSlot(slot,dict):
     dict[slot.id]=slot
@@ -174,8 +273,6 @@ def intersects(hSlot,vSlot):
         vSlot.connections.append(Connection(vSlot.id,hSlot.id,(h[0][0],v[0][1]),vlength,hlength))
         
     
-
-
 def getPairs(dict,lam,slotBank,idTracker):
     # print("dictprint",dict)
     # print("dictkeys",dict.keys())
@@ -203,50 +300,6 @@ def getPairs(dict,lam,slotBank,idTracker):
             lineArrs.sort(key=lambda x:x[lam])
             slotBank[idTracker[0]]=WordSlot(idTracker[0],lineArrs,lam)
             idTracker[0]+=1
-            # pairs.append(lineArrs)
-    # return pairs
-        
-# def recursiveWordFill(wordIdBank,words,slotId,slotBank,visitedSlots,assigned):
-#     print("=====wib",wordIdBank)
-#     visitedSlots[slotId]=True
-#     print(visitedSlots)
-#     slot=slotBank[slotId]
-#     for wordId in wordIdBank:
-#         print("=inr wib",slot.id,wordIdBank)
-#         print("????{} {} on {} :slot {}".format(slot.id,words[wordId],slot.length,slot.id))
-#         if len(words[wordId])==slot.length: #slot and word LENGTH work
-#             working=True
-#             print("{} WORKS in len on {} !!!".format(words[wordId],slot.length))
-#             for connection in slot.connections:#check connections
-#                 if assigned.get(connection.connectedTo)!=None:
-#                     if words[assigned.get(connection.connectedTo)][connection.connectedSlot]!=words[wordId][connection.ownerSlot]:
-#                         print("{} on {}, Connection fail on {}-{}!={}-{} !!!".format(words[wordId],
-#                         slot.length,
-#                         words[assigned.get(connection.connectedTo)],
-#                         words[assigned.get(connection.connectedTo)][connection.connectedSlot],
-#                         words[wordId][connection.connectedSlot],
-#                         words[wordId]))
-#                         working=False
-#                         break
-                        
-#             if working:
-#                 assigned[slotId]=wordId
-#                 copyWIB=wordIdBank.copy() #inefficieny point?
-#                 copyWIB.remove(wordId)
-#                 print(assigned)
-#                 for connection in slot.connections:
-#                     print("CONNECTIONS OF ",slot.id)
-#                     if visitedSlots.get(connection.connectedTo)==None:
-#                        sol=recursiveWordFill(copyWIB,words,connection.connectedTo,slotBank,visitedSlots.copy(),assigned.copy())
-#                     #    if sol !=None:
-#                         # for value in sol.values():
-#                         #     if value in copyWIB:
-#                         #         copyWIB.remove(value)
-#                 return assigned
-#             #check slot connections
-#                 #if null slot connection neighbor it passes
-#     return None
-            
 
 
 
