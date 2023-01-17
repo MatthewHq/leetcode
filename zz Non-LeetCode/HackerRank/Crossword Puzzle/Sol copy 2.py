@@ -42,7 +42,7 @@ class Connection():
         self.connectedTo=connectedTo #id of who the owner is connected to
         self.location=location
         self.ownerSlot=ownerSlot #at which location in the word is the junction
-        self.connectedSlot=connectedSlot #at which location in the word is the junction
+        self.connectedSlot=connectedSlot #at which location in the word is the junction ie, the word[x]
     def __repr__(self):
         return "({}@{}<->{}@{})".format(self.ownerSlot,self.ownerId,self.connectedTo,self.connectedSlot)
 
@@ -66,10 +66,12 @@ def crosswordPuzzle(crossword, words):
     # print(visited)
 
     ends = []
+    islandAt=[]
     while len(visited) > 0:
         coordTuple = visited.popitem()[0]
         # print("popped", coordTuple)
         recursiveExplore(coordTuple, crossword, visited,ends)
+
         
         
     print(ends)
@@ -152,21 +154,23 @@ def crosswordPuzzle(crossword, words):
 def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlots,words,wordsBySize,path,wordTarget=None):
     
     localSol=[visited,availableWords,path]
-    
-    potentialWords=[]
-
     if wordTarget==None:
 
         #for each possibility, recurse. Ignore used words
         for wordOfSize in wordsBySize[allSlots[slotTarget].length]:
-            if availableWords.get(wordOfSize)==True: #Ignore used words
-                availableWords[wordOfSize]=False#tag used word
+            if localSol[1].get(wordOfSize)==True: #Ignore used words
+                localSol[1][wordOfSize]=False#tag used word
                 print("CALLED IN A",visited,wordOfSize,slotTarget,wordsBySize[allSlots[slotTarget].length])
-                markvisited(visited,slotTarget)
-                solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),slotTarget,availableWords.copy(),allSlots,words,wordsBySize,path.copy(),wordOfSize)
+                markvisited(localSol[0],slotTarget)
+                solution=recursiveLayerGuess(wordJunctionMap,localSol[0].copy(),slotTarget,localSol[1].copy(),allSlots,words,wordsBySize,localSol[2].copy(),wordOfSize)
                 #break? i dont think so because if fails in future
                 if solution!=None:
-                    mergeSol(localSol,solution,visited,availableWords,path)
+                    mergeSol(localSol,solution)
+                    if islandCondition(localSol[0],localSol[1],wordOfSize):
+                        return solution
+                    #if all visited and only the current wordOfSize is FALSE THEN RETURN THE SOLUTION YOU GOT THE ISLAND
+                localSol[1][wordOfSize]=True#tag used word as available for next loop
+            
     else:
         path[slotTarget]=wordTarget
 
@@ -175,7 +179,8 @@ def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlo
     for connection in allSlots[slotTarget].connections:
         
         if visited.get(connection.connectedTo)==False:
-            print("CALLED IN B")
+            markvisited(localSol[0],connection.connectedTo)
+            # print("CALLED IN B")
             # print(wordTarget)
             # print(wordJunctionMap)
             # print(path)
@@ -183,41 +188,56 @@ def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlo
             # print(wordJunctionMap[len(words[path[connection.ownerId]])])
             # print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
             # print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
-            potentials=wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot))
+            potentials=wordJunctionMap[allSlots[connection.connectedTo].length].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot))
             if potentials!=None:
                 for potentialWord in potentials:
-                    solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),connection.connectedTo,availableWords.copy(),allSlots,words,wordsBySize,path.copy(),potentialWord)
+                    if localSol[1][potentialWord]==True:
+                        localSol[1][potentialWord]=False
+                        solution=solution=recursiveLayerGuess(wordJunctionMap,localSol[0].copy(),connection.connectedTo,localSol[1].copy(),allSlots,words,wordsBySize,localSol[2].copy(),potentialWord)
                     #break? i dont think so because if fails in future
-                    if solution!=None:
-                        mergeSol(localSol,solution,visited,availableWords,path)
+                        if solution!=None:
+                            mergeSol(localSol,solution)
             else:
                 return None
 
     # if len(visited)==len(allSlots):
     #     return localSol
 
-    allFalse=True
-    for slotId in visited.keys():
-        if not visited[slotId]:
-            print("CALLED IN C")
-            print("{} {} PATH|{}|".format(visited,availableWords,path))
-            solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),slotId,availableWords.copy(),allSlots,words,wordsBySize,path.copy())
-            if solution!=None:
-                mergeSol(localSol,solution,visited,availableWords,path)
-            allFalse=False
-    if allFalse:
-        return localSol
-    
+    # allFalse=True
+    # for slotId in visited.keys():
+    #     if not visited[slotId]:
+    #         print("CALLED IN C")
+    #         print("{} {} PATH|{}|".format(visited,availableWords,path))
+    #         solution=recursiveLayerGuess(wordJunctionMap,visited.copy(),slotId,availableWords.copy(),allSlots,words,wordsBySize,path.copy())
+    #         if solution!=None:
+    #             mergeSol(localSol,solution,visited,availableWords,path)
+    #         allFalse=False
+    # if allFalse:
+    return localSol
+
+#if all visited and only the current wordOfSize is FALSE THEN RETURN THE SOLUTION YOU GOT THE ISLAND
+def islandCondition(visited,availableWords,currentWord):
+    fullIsland=True
+    for val in visited.values():
+        if val==False:
+            fullIsland=False
+        
+    for word in availableWords.keys():
+        if availableWords[word]==True and availableWords[word]!=currentWord:
+            fullIsland=False
+    return fullIsland
+
+
 def markvisited(visited,slotTarget):
     if visited.get(slotTarget)==False:
         visited[slotTarget]=True
     else:
         print("VISITING AGAIN? ERROR ERROR ERROR ERROR")
 
-def mergeSol(local,new,visited,usedWords,path):
-    visited=new[0]
-    availableWords=new[1]
-    path=new[2]
+def mergeSol(local,new):
+    local[0]=new[0]
+    local[1]=new[1]
+    local[2]=new[2]
 
 
 def concatenateSlots(raw,all,bysize):
@@ -275,7 +295,7 @@ def intersects(hSlot,vSlot):
     
 def getPairs(dict,lam,slotBank,idTracker):
     # print("dictprint",dict)
-    # print("dictkeys",dict.keys())
+    # print("dictkeys",dict.keys())  
     # pairs=[]
     for lineArrs in dict.values():
         pair=[]
@@ -369,6 +389,7 @@ input1 = "++++++++++"+"\n"+"+------+++"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"
 
 input2="++++++++++"+"\n"+"+-----+---"+"\n"+"+++-++++++ "+"\n"+"+++-++++++ "+"\n"+"+++-----++ "+"\n"+"+++-++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
 input3="++++++++++"+"\n"+"+-----+--+"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"+"+++-----++"+"\n"+"+++-++-+++"+"\n"+"++++++-+++"+"\n"+"++++++-+++"+"\n"+"+-++++-+++"+"\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
-hrInput = input2Arr(input1)
+input4="++++++++++"+"\n"+"+------+++"+"\n"+"+-+-++++++"+"\n"+"+-+-++++++"+"\n"+"+-+-----++"+"\n"+"+-+-++-+++"+"\n"+"+------+++"+"\n"+"++++++-+++"+"\n"+"++++++-+++"+"\n"+"++++++++++"+"\n"+"ABCDEF;ALMNOP;CGHIJK;IRSTU;TVWXY;PQKZEW"
+hrInput = input2Arr(input4)
 
 crosswordPuzzle(hrInput[0], hrInput[1])
