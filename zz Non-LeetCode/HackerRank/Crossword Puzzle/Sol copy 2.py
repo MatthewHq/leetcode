@@ -27,7 +27,7 @@ import sys
 class WordSlot():
     def __init__(self,id,pairs,type):
         self.id=id
-        self.type=type
+        self.type=type #1 is horizontal, 0 is vertical
         self.connections=[]
         self.start=pairs[0]
         self.end=pairs[1]
@@ -144,14 +144,65 @@ def crosswordPuzzle(crossword, words):
 
 
     
+    # DEBUG
 
-    pathOutline=recursiveLayerGuess(wordJunctionMap,visited,0,availableWords,allSlots,words,wordsBySize,{})
+    iniFill=iniFillCrossIdentity(allSlots)
+    fillCrossWord(crossword,iniFill[0],allSlots,iniFill[1])
+    printCrossword(crossword)
+
+
+    #DEBUUG END
+
+    pathOutline=recursiveLayerGuess(crossword,wordJunctionMap,visited,0,availableWords,allSlots,words,wordsBySize,{})
 
     print(pathOutline)
 
+    fillCrossWord(crossword,pathOutline[2],allSlots,words)
+    printCrossword(crossword)
+    
+
+def iniFillCrossIdentity(allSlots): #DEBUG
+    fakeSol={}
+    fakeWords=[]
+    for i in range(len(allSlots)):
+        # key=allSlots[i]
+        fakeWord=""
+        for j in range(allSlots[i].length):
+            fakeWord+=str(i)
+        fakeWords.append(fakeWord)
+        fakeSol[i]=i
+    return [fakeSol,fakeWords]
+
+def printCrossword(crossword): #DEBUG
+    for line in crossword:
+        processedLine=""
+        for c in line:
+            if c=="+":
+                processedLine+="[ ]"
+            else:
+                processedLine+="["+c+"]"
+        print(processedLine)
+
+
+def fillCrossWord(crossword,solDict,allSlots,words): 
+    for key in solDict.keys():
+        targetTuple=[allSlots[key].start[0],allSlots[key].start[1]]
+        # print(len(words[solDict[key]]))
+        # print(crossword[targetTuple[0]][targetTuple[1]],targetTuple[0],targetTuple[1])
+        # print(words[solDict[key]])
+        for i in range(len(words[solDict[key]])):
+            # print(words[solDict[key]][i] , "||")
+            # print(i)
+            crossword[targetTuple[0]][targetTuple[1]]=words[solDict[key]][i]
+            targetTuple[allSlots[key].type]+=1
+
+
+        
+
+
 
 #solution: visited,usedwords,stringPath
-def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlots,words,wordsBySize,path,wordTarget=None):
+def recursiveLayerGuess(crossword,wordJunctionMap,visited,slotTarget,availableWords,allSlots,words,wordsBySize,path,wordTarget=None):
     
     localSol=[visited,availableWords,path]
     if wordTarget==None:
@@ -162,7 +213,7 @@ def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlo
                 localSol[1][wordOfSize]=False#tag used word
                 print("CALLED IN A",visited,wordOfSize,slotTarget,wordsBySize[allSlots[slotTarget].length])
                 markvisited(localSol[0],slotTarget)
-                solution=recursiveLayerGuess(wordJunctionMap,localSol[0].copy(),slotTarget,localSol[1].copy(),allSlots,words,wordsBySize,localSol[2].copy(),wordOfSize)
+                solution=recursiveLayerGuess(crossword,wordJunctionMap,localSol[0].copy(),slotTarget,localSol[1].copy(),allSlots,words,wordsBySize,localSol[2].copy(),wordOfSize)
                 #break? i dont think so because if fails in future
                 if solution!=None:
                     mergeSol(localSol,solution)
@@ -173,6 +224,10 @@ def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlo
             
     else:
         path[slotTarget]=wordTarget
+        iniFill=iniFillCrossIdentity(allSlots)
+        fillCrossWord(crossword,iniFill[0],allSlots,iniFill[1])
+        fillCrossWord(crossword,path,allSlots,words)
+        printCrossword(crossword)
 
 
     #for each connection, recurse, ignore visited
@@ -180,23 +235,25 @@ def recursiveLayerGuess(wordJunctionMap,visited,slotTarget,availableWords,allSlo
         
         if visited.get(connection.connectedTo)==False:
             markvisited(localSol[0],connection.connectedTo)
-            # print("CALLED IN B")
-            # print(wordTarget)
-            # print(wordJunctionMap)
-            # print(path)
-            # print(path[connection.ownerId])
-            # print(wordJunctionMap[len(words[path[connection.ownerId]])])
-            # print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
-            # print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
+            print("CALLED IN B")
+            # print(wordTarget,"Z")
+            # print(wordJunctionMap,"Y")
+            print(path,"W")
+            print(path[connection.ownerId],"X")
+            print(wordJunctionMap[len(words[path[connection.ownerId]])],"Z2")
+            print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
+            print(wordJunctionMap[len(words[path[connection.ownerId]])].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot)))
             potentials=wordJunctionMap[allSlots[connection.connectedTo].length].get((words[path[connection.ownerId]][connection.ownerSlot],connection.connectedSlot))
             if potentials!=None:
                 for potentialWord in potentials:
                     if localSol[1][potentialWord]==True:
                         localSol[1][potentialWord]=False
-                        solution=solution=recursiveLayerGuess(wordJunctionMap,localSol[0].copy(),connection.connectedTo,localSol[1].copy(),allSlots,words,wordsBySize,localSol[2].copy(),potentialWord)
+                        solution=solution=recursiveLayerGuess(crossword,wordJunctionMap,localSol[0].copy(),connection.connectedTo,localSol[1].copy(),allSlots,words,wordsBySize,localSol[2].copy(),potentialWord)
                     #break? i dont think so because if fails in future
                         if solution!=None:
                             mergeSol(localSol,solution)
+                        else:
+                            localSol[1][potentialWord]=True
             else:
                 return None
 
@@ -390,6 +447,8 @@ input1 = "++++++++++"+"\n"+"+------+++"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"
 input2="++++++++++"+"\n"+"+-----+---"+"\n"+"+++-++++++ "+"\n"+"+++-++++++ "+"\n"+"+++-----++ "+"\n"+"+++-++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++-+++ "+"\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
 input3="++++++++++"+"\n"+"+-----+--+"+"\n"+"+++-++++++"+"\n"+"+++-++++++"+"\n"+"+++-----++"+"\n"+"+++-++-+++"+"\n"+"++++++-+++"+"\n"+"++++++-+++"+"\n"+"+-++++-+++"+"\n"+"++++++++++"+"\n"+"POLAND;LHASA;SPAIN;INDIA"
 input4="++++++++++"+"\n"+"+------+++"+"\n"+"+-+-++++++"+"\n"+"+-+-++++++"+"\n"+"+-+-----++"+"\n"+"+-+-++-+++"+"\n"+"+------+++"+"\n"+"++++++-+++"+"\n"+"++++++-+++"+"\n"+"++++++++++"+"\n"+"ABCDEF;ALMNOP;CGHIJK;IRSTU;TVWXY;PQKZEW"
+input4="++++++++++"+"\n"+"+------+++"+"\n"+"+-+-++++++"+"\n"+"+-+-++++++"+"\n"+"+-+-----++"+"\n"+"+-+-++-+++"+"\n"+"+------+++"+"\n"+"++++++-+++"+"\n"+"++++++-+++"+"\n"+"++++++++++"+"\n"+"ABADEF;ALMNOA;AGHAJA;ARSAU;AVAXY;AQAZEA"
+
 hrInput = input2Arr(input4)
 
 crosswordPuzzle(hrInput[0], hrInput[1])
