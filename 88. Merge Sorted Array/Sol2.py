@@ -13,7 +13,7 @@ class Solution:
             n2Read=n-1
 
             while writer!=-1:
-                if (n1Read!= -1 or n2Read==-1)and nums1[n1Read]>nums2[n2Read]:
+                if (n1Read!= -1 and nums1[n1Read]>nums2[n2Read]) or n2Read==-1:
                     nums1[writer]=nums1[n1Read]
                     n1Read-=1
                 else:

@@ -3,11 +3,11 @@ class Solution:
         dupeSet=set()
         for i in nums:
             if i in dupeSet:
-                return False
+                return True
             dupeSet.add(i)
-        return True
+        return False
             
-
+ 
 sol = Solution()
 
 arr=[1,2,3,4,4]
