@@ -20,12 +20,13 @@ class Solution:
             else:
                 exceptions.append(sweeps[0][i-1]*sweeps[1][l-i-2])
 
-        print(nums)
-        print(sweeps)
-        print(exceptions)
+        # print(nums)
+        # print(sweeps)
+        # print(exceptions)
+        return exceptions
 
 
 nums = [8, 2, 3, 4, 5]
-nums = [-1,2,3,4,5,1,2]
+nums = [-1, 2, 3, 4, 5, 1, 2]
 sol = Solution()
 sol.productExceptSelf(nums)
