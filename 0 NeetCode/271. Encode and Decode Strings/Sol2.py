@@ -8,9 +8,9 @@ class Codec:
 
         for stri in strs:
             starts+=str(charCounter)+"="+str(len(stri))+"."
-            for c in stri:
-                fullStr+=c
-                charCounter+=1
+            charCounter+=len(stri)
+            fullStr+=stri
+
         
         #print(starts)
         #print(starts+"/"+fullStr)
