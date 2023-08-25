@@ -30,7 +30,7 @@ class Solution:
         negativeHash=self.calcNegativeHash(nums)
         completeSols=[]
         setCheck={}
-        debugByIndex=[]
+        # debugByIndex=[]
 
         
 
@@ -41,7 +41,7 @@ class Solution:
                     sols=negativeHash.get(sum2)
                     for k in range(len(sols)):
                         if sols[k]>j:
-                            debugByIndex.append([i,j,sols[k]])
+                            # debugByIndex.append([i,j,sols[k]])
                             sort=sorted([nums[i],nums[j],nums[sols[k]]])
                             joinedSTR='^'.join(str(x)for x in sort)
                             if setCheck.get(joinedSTR)==None:
