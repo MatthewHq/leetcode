@@ -4,7 +4,7 @@ from typing import List
 class Solution:
     def maxArea(self, height: List[int]) -> int:
         l, r = 0, (len(height)-1)
-        print(l, r)
+        # print(l, r)
         waterMax = 0
         while l < r:
             currentWater = (r-l)*min(height[l], height[r])
