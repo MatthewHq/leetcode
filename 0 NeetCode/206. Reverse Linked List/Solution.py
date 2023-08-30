@@ -11,11 +11,21 @@ class Solution:
             return None
         if head.next==None:
             return head
-        prior=ListNode(head.val,None)
-        while head.next!=None:
+        
+        prev=head
+        current=head.next
+        head=current.next
+        prev.next=None
+
+        while head!=None:
+            current.next=prev
+            prev=current
+            current=head
             head=head.next
-            prior=ListNode(head.val,prior)
-        return prior
+
+        current.next=prev
+
+        return current
     # 1 2 3 4 
     # *1(2) <- _(1,)
     # 1 *2(3) <- _
@@ -47,7 +57,7 @@ class Solution:
 
 sol = Solution()
 
-arr=[]
+arr=[1,2,3,4]
 l=sol.createLinkedList(arr)
 sol.printLinkedList(l)
 
