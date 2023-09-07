@@ -12,27 +12,27 @@ class Solution:
 #the if statements can be rearranged
         for i in range(len(heights)):
             if len(current)!=0 or heights[i]!=0:
-                print(i,heights[i],"=====")
+                # print(i,heights[i],"=====")
             
                 if len(current)==0 and heights[i]!=0:
                     current.append([heights[i],1])
                 elif heights[i] > current[-1][0]:  # the new one is bigger
-                    print("A")
+                    # print("A")
                     current.append([heights[i],1])
                 
                 elif heights[i]==current[-1][0]:
-                    print("B")
+                    # print("B")
                     current[-1][1]=current[-1][1]+1
 
                 elif heights[i]<current[-1][0]: #new one is smaller
-                    print("C")
+                    # print("C")
                     stackLen=0
                     while len(current) > 0 and heights[i] < current[-1][0]:
                         top=current.pop()
-                        print("OLD TOP",top,stackLen)
+                        # print("OLD TOP",top,stackLen)
                         oldStack=top[1]
                         top[1]=top[1]+stackLen 
-                        print("NEW TOP",top)
+                        # print("NEW TOP",top)
                         stackLen+=oldStack
                         
                         if top[0]*top[1]>biggest:
@@ -43,11 +43,11 @@ class Solution:
                         else:
                             current.append([heights[i],stackLen+1])
                 
-            print(current)
+            # print(current)
 
         for j in reversed(range(len(current))):
             leftOver=current[j]
-            print(leftOver,"left")
+            # print(leftOver,"left")
             if leftOver[0]*leftOver[1]>biggest:
                 biggest=leftOver[0]*leftOver[1]
             if j>0:

@@ -50,8 +50,6 @@ class Solution:
             temp=ListNode(arr[i],None)
             builder.next=temp
             builder=builder.next
-        
-        # print(head)
         return head
     
 sol=Solution()
