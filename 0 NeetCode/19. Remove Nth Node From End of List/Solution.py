@@ -18,6 +18,9 @@ class Solution:
             forward=forward.next
             if not prev:
                 prev=head
+            # prev=keep
+            else:
+                prev=prev.next
             # keep=keep.next
             
         
